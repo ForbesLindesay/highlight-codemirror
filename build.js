@@ -108,6 +108,10 @@ step('generate codemirror', function () {
   write('./lib/codemirror.js', stream.toString());
 });
 
+step('cleanup', function () {
+  rimraf(__dirname + '/src');
+}, '60 seconds');
+
 function property(name) {
   return {
     TYPE: 'Dot',
