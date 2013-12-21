@@ -22,7 +22,7 @@ Highlight some code and return the resulting html.
 var CodeMirror = require('highlight-codemirror');
 
 CodeMirror.loadMode('javascript');
-var html = CodeMirror.highlight('assert(typeof "foo" === "string")', {mode: 'javascript'});
+var html = CodeMirror.highlight('assert(typeof "foo" === "string")', {name: 'javascript'});
 ```
 
 ## License
