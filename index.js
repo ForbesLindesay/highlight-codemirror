@@ -2,10 +2,11 @@
 
 var fs = require('fs');
 var vm = require('vm');
+var path = require('path');
 var format = require('util').format;
+var resolve = require('resolve').sync;
 var escape = require('escape-html');
 var CodeMirror = require('./lib/codemirror.js');
-require('./lib/overlay.js');
 
 CodeMirror.runMode = function(string, modespec, callback) {
   var mode = CodeMirror.getMode({indentUnit: 2}, modespec);
@@ -21,10 +22,22 @@ CodeMirror.runMode = function(string, modespec, callback) {
   }
 };
 
+var cache = {};
+cache[require.resolve('codemirror')] = CodeMirror;
 CodeMirror.loadMode = function (name) {
-  var filename = /^[A-Za-z0-9]+$/.test(name) ? require.resolve('codemirror/mode/' + name + '/' + name + '.js') : name;
-  var modeDef = fs.readFileSync(filename, 'utf8');
-  vm.runInNewContext(modeDef, { CodeMirror: CodeMirror }, 'codemirror/mode/' + name + '/' + name + '.js');
+  function loadFile(filename) {
+    if (filename in cache) return cache[filename];
+    var exports = (cache[filename] = {});
+    var moduleObject = {exports: exports};
+    function childRequire(name) {
+      if (/^codemirror/.test(name)) return loadFile(require.resolve(name));
+      else return loadFile(resolve(name, {basedir: path.dirname(filename)}));
+    }
+    var source = fs.readFileSync(filename, 'utf8');
+    vm.runInNewContext(source, { CodeMirror: CodeMirror, module: moduleObject, exports: exports, require: childRequire }, filename);
+    return (cache[filename] = moduleObject.exports);
+  }
+  return loadFile(/^[A-Za-z0-9]+$/.test(name) ? require.resolve('codemirror/mode/' + name + '/' + name + '.js') : path.resolve(name));
 };
 
 CodeMirror.highlight = function (string, options) {
@@ -61,7 +74,7 @@ CodeMirror.highlight = function (string, options) {
 
     content = escape(content);
     if (style) {
-      var className = 'cm-' + style.replace(/ +/g, 'cm-');
+      var className = 'cm-' + style.replace(/ +/g, ' cm-');
       content = format('<span class="%s">%s</span>', className, content);
     }
     html += content;
@@ -70,4 +83,18 @@ CodeMirror.highlight = function (string, options) {
   return html;
 };
 
-module.exports = CodeMirror;
+function highlightCode(code, mode) {
+  if (typeof mode === 'string') mode = {name: mode};
+  var modeSpec = CodeMirror.resolveMode(mode);
+  if (!modeSpec && (modeSpec.name === 'null' && mode.name !== 'null')) {
+    CodeMirror.loadMode(mode.name);
+  }
+  return CodeMirror.highlight(code, mode);
+}
+for (var key in CodeMirror) {
+  if (typeof CodeMirror[key] === 'function') {
+    highlightCode[key] = CodeMirror[key].bind(CodeMirror);
+  }
+}
+
+module.exports = highlightCode;

@@ -4,6 +4,7 @@ var relative = require('path').relative;
 var join = require('path').join;
 var dirname = require('path').dirname;
 var fs = require('fs');
+var assert = require('assert');
 
 var step = require('testit');
 var npm = require('npm-fetch');
@@ -11,27 +12,37 @@ var unpack = require('tar-pack').unpack;
 var mkdirp = require('mkdirp').sync;
 var rimraf = require('rimraf').sync;
 var UglifyJS = require('uglify-js');
+var semver = require('semver');
 
-
-step('cleanup', function (callback) {
+var completedCleanup = false;
+var completedDownload = false;
+var completedVersion = false;
+step('cleanup', function () {
   rimraf(__dirname + '/src');
   rimraf(__dirname + '/lib');
   mkdirp(__dirname + '/lib');
+  completedCleanup = true;
+});
+
+step('download codemirror', function (callback) {
+  if (!completedCleanup) throw new Error('skipped because cleanup was unsucessful');
   npm('codemirror', '*').pipe(unpack(__dirname + '/src', callback));
+  completedDownload = true;
 }, '60 seconds');
 
 step('get version', function () {
+  if (!completedDownload) throw new Error('skipped because download was unsucessful');
   var version = JSON.parse(read('./src/package.json')).version;
   var pkg = JSON.parse(read('./package.json'));
+  assert(pkg.version === version || semver.gt(version, pkg.version), version + ' is too low, must be greater than or equal to ' + pkg.version);
   pkg.version = version;
+  pkg.dependencies.codemirror = '~' + version;
   write('./package.json', JSON.stringify(pkg, null, '  '));
-});
-
-step('plugins', function () {
-  write('./lib/overlay.js', 'var CodeMirror = require("./codemirror.js");\n' + read('./src/addon/mode/overlay.js'));
+  completedVersion = true;
 });
 
 step('generate codemirror', function () {
+  if (!completedVersion) throw new Error('skipped because updating versions was unsucessful');
   var ast = UglifyJS.parse(read('./src/lib/codemirror.js'));
   ast.figure_out_scope();
   ast = ast.transform(new UglifyJS.TreeTransformer(function (node, descend) {
@@ -148,6 +159,7 @@ var toRemove = [
   'TextMarker',
   'opera_version',
   'ie_lt9',
+  'ie_upto8',
   'elt',
   'bidiOrdering',
   'eventMixin',
