@@ -94,6 +94,8 @@ function highlightCode(code, mode) {
 for (var key in CodeMirror) {
   if (typeof CodeMirror[key] === 'function') {
     highlightCode[key] = CodeMirror[key].bind(CodeMirror);
+  } else {
+    highlightCode[key] = CodeMirror[key];
   }
 }
 
