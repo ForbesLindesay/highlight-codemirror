@@ -46,25 +46,6 @@ step('generate codemirror', function () {
   var ast = UglifyJS.parse(read('./src/lib/codemirror.js'));
   ast.figure_out_scope();
   ast = ast.transform(new UglifyJS.TreeTransformer(function (node, descend) {
-
-    // replace `window.CodeMirror` with `module.exports`
-    var windowDotCodeMirror = {
-      TYPE: 'Dot',
-      property: 'CodeMirror',
-      expression: {
-        TYPE: 'SymbolRef',
-        name: 'window',
-        thedef: {
-          global: true
-        }
-      }
-    };
-    if (match(node, windowDotCodeMirror)) {
-      return make('Dot', {
-        expression: make('SymbolRef', { name: 'module' }),
-        property: 'exports'
-      });
-    }
     if (match(node, { TYPE: 'Defun', name: { TYPE: 'SymbolDefun', name: 'CodeMirror' } })) {
       return make('Var', {
         definitions: [
@@ -158,6 +139,8 @@ var toRemove = [
   'updateDisplay',
   'TextMarker',
   'opera_version',
+  'ie',
+  'ie_version',
   'ie_lt9',
   'ie_upto8',
   'elt',
