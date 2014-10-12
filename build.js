@@ -34,10 +34,10 @@ step('get version', function () {
   if (!completedDownload) throw new Error('skipped because download was unsucessful');
   var version = JSON.parse(read('./src/package.json')).version;
   var pkg = JSON.parse(read('./package.json'));
-  assert(pkg.version === version || semver.gt(version, pkg.version), version + ' is too low, must be greater than or equal to ' + pkg.version);
+  // assert(pkg.version === version || semver.gt(version, pkg.version), version + ' is too low, must be greater than or equal to ' + pkg.version);
   pkg.version = version;
   pkg.dependencies.codemirror = '~' + version;
-  write('./package.json', JSON.stringify(pkg, null, '  '));
+  //write('./package.json', JSON.stringify(pkg, null, '  '));
   completedVersion = true;
 });
 
