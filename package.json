@@ -4,7 +4,7 @@
   "version": "4.6.1",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ForbesLindesay/browserify-middleware.git"
+    "url": "https://github.com/ForbesLindesay/highlight-codemirror.git"
   },
   "dependencies": {
     "codemirror": "~4.6.0",
