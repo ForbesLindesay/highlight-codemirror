@@ -14,6 +14,7 @@ The source should be a string of code to highlight. The mode should be either th
 
 ```javascript
 var highlight = require('highlight-codemirror');
+highlight.loadMode('javascript');
 
 var html = highlight('assert(typeof "foo" === "string")', 'javascript');
 // => '<span class="cm-variable">assert</span>(<span class="cm-keyword">typeof</span> <span class="cm-string">&quot;foo&quot;</span> <span class="cm-operator">===</span> <span class="cm-string">&quot;string&quot;</span>)'
@@ -21,7 +22,7 @@ var html = highlight('assert(typeof "foo" === "string")', 'javascript');
 
 ### highlight.loadMode(name);
 
-Loading modes is synchronous, so you may wish to pre-populate the cache bu loading the mode up front.  You can also load custom modes by passing an absolute path to a JavaScript file.  e.g. the null mode might look like:
+Loading modes is synchronous, so you may wish to pre-populate the cache by loading the mode up front.  You can also load custom modes by passing an absolute path to a JavaScript file.  e.g. the null mode might look like:
 
 /custom-null-mode.js
 
