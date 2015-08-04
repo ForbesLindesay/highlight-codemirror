@@ -135,6 +135,15 @@ var toRemove = [
   'contains',
   'rmClass',
   'addClass',
+  'Pos',
+  'cmpPos',
+  'changeEnd',
+  'e_preventDefault',
+  'e_stopPropagation',
+  'e_stop',
+  'on',
+  'off',
+  'signal',
   //var
   'commadns',
   'keyMap',
@@ -177,7 +186,12 @@ var toRemove = [
   'removeChildrenAndAdd',
   'activeElt',
   'classTest',
-  'hasCopyEvent'
+  'hasCopyEvent',
+  'Selection',
+  'Range',
+  'BranchChunk',
+  'LeafChunk',
+  'Delayed'
 ];
 
 function includeStatement(node, visited) {
