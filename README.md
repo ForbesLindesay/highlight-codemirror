@@ -3,8 +3,8 @@
 A syntax highlighter built to run in node and consume CodeMirror modes.
 
 [![Build Status](https://img.shields.io/travis/ForbesLindesay/highlight-codemirror/master.svg)](https://travis-ci.org/ForbesLindesay/highlight-codemirror)
-[![Dependency Status](https://img.shields.io/gemnasium/ForbesLindesay/highlight-codemirror.svg)](https://gemnasium.com/ForbesLindesay/highlight-codemirror)
-[![NPM version](https://img.shields.io/npm/v/highlight-codemirror.svg)](http://badge.fury.io/js/highlight-codemirror)
+[![Dependency Status](https://img.shields.io/david/ForbesLindesay/highlight-codemirror.svg)](https://david-dm.org/ForbesLindesay/highlight-codemirror)
+[![NPM version](https://img.shields.io/npm/v/highlight-codemirror.svg)](https://www.npmjs.com/package/highlight-codemirror)
 
 ## API
 
