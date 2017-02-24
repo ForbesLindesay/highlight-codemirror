@@ -1,5 +1,7 @@
 # highlight-codemirror
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/ForbesLindesay/highlight-codemirror.svg)](https://greenkeeper.io/)
+
 A syntax highlighter built to run in node and consume CodeMirror modes.
 
 [![Build Status](https://img.shields.io/travis/ForbesLindesay/highlight-codemirror/master.svg)](https://travis-ci.org/ForbesLindesay/highlight-codemirror)
